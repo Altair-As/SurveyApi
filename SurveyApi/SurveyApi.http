@@ -1,0 +1,6 @@
+@SurveyApi_HostAddress = http://localhost:5096
+
+GET {{SurveyApi_HostAddress}}/
+Accept: application/json
+
+###
