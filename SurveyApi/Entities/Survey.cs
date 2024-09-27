@@ -7,5 +7,6 @@
         public string? Description { get; set; }
 
         public ICollection<Question> Questions { get; set; } = new List<Question>();
+        public ICollection<Interview> Interviews { get; set; } = new List<Interview>();
     }
 }
