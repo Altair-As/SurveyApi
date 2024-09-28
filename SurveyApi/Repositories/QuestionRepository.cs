@@ -7,7 +7,7 @@ namespace SurveyApi.Repositories
 {
     public class QuestionRepository(AppDbContext context) : IQuestionRepository
     {
-        public async Task<int> GetNextQuestionId(int questionId)
+        public async Task<int> GetNextQuestionIdAsync(int questionId)
         {
             var currentQuestion = await context.Questions
                 .Where(q => q.Id == questionId)
@@ -24,7 +24,7 @@ namespace SurveyApi.Repositories
             return nextQuestionId == 0 ? -1 : nextQuestionId;
         }
 
-        public async Task<int> GetFirstQuestionIdBySurveyId(int surveyId)
+        public async Task<int> GetFirstQuestionIdBySurveyIdAsync(int surveyId)
         {
             var firstQuestionId = await context.Questions
                 .Where(q => q.SurveyId == surveyId)
