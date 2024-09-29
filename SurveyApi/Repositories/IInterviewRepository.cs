@@ -4,6 +4,6 @@ namespace SurveyApi.Repositories
 {
     public interface IInterviewRepository
     {
-        Task AddInterviewAsync(Interview interview);
+        Task<int> AddInterviewAsync(Interview interview);
     }
 }
