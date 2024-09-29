@@ -34,7 +34,7 @@ namespace SurveyApi.Services
             {
                 SurveyId = startSurveyDto.SurveyId,
                 UserId = startSurveyDto.UserId,
-                DateStarted = DateTime.UtcNow,
+                DateStarted = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc),
             };
 
             var interviewId = await interviewRepository.AddInterviewAsync(interview);

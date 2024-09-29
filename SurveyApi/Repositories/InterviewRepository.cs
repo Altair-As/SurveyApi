@@ -19,7 +19,8 @@ namespace SurveyApi.Repositories
             var interview = await context.Interviews.FindAsync(interviewId)
                 ?? throw new InvalidOperationException($"Invalid interview id: {interviewId}");
 
-            interview.DateCompleted = DateTime.Now;
+            interview.DateStarted = DateTime.SpecifyKind(interview.DateStarted, DateTimeKind.Utc);
+            interview.DateCompleted = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc);
 
             context.Interviews.Update(interview);
             await context.SaveChangesAsync();
