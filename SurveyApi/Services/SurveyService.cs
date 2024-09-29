@@ -28,7 +28,7 @@ namespace SurveyApi.Services
             };
         }
 
-        public async Task<QuestionAndInterviewDto> StartSurveyAsync(StartSurveyDto startSurveyDto)
+        public async Task<int> StartInterviewAsync(StartSurveyDto startSurveyDto)
         {
             var interview = new Interview
             {
@@ -37,14 +37,19 @@ namespace SurveyApi.Services
                 DateStarted = DateTime.UtcNow,
             };
 
-            return new QuestionAndInterviewDto
-            {
-                InterviewId = await interviewRepository.AddInterviewAsync(interview),
-                QuestionId = await questionRepository.GetFirstQuestionIdBySurveyIdAsync(startSurveyDto.SurveyId)
-            };
+            var interviewId = await interviewRepository.AddInterviewAsync(interview);
+
+            return interviewId;
         }
 
-        public async Task<QuestionIdDto> SaveAnswerAsync(SaveAnswerDto saveAnswerDto)
+        public async Task<int> GetFirstQuestionAsync(int surveyId)
+        {
+            var firstQuestionId = await questionRepository.GetFirstQuestionIdBySurveyIdAsync(surveyId);
+
+            return firstQuestionId;
+        }
+
+        public async Task SaveAnswerAsync(SaveAnswerDto saveAnswerDto)
         {
             var result = new Result
             {
@@ -54,11 +59,18 @@ namespace SurveyApi.Services
             };
 
             await resultRepository.AddResultAsync(result);
+        }
 
-            return new QuestionIdDto
-            {
-                QuestionId = await questionRepository.GetNextQuestionIdAsync(saveAnswerDto.QuestionId)
-            };
+        public async Task<int> GetNextQuestionIdAsync(int questionId)
+        {
+            var nextQuestionId = await questionRepository.GetNextQuestionIdAsync(questionId);
+
+            return nextQuestionId;
+        }
+
+        public async Task FinishInterviewAsync(int interviewId)
+        {
+            await interviewRepository.FinishInterviewAsync(interviewId);
         }
     }
 }

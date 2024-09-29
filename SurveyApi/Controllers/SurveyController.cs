@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SurveyApi.DTOs;
+using SurveyApi.Entities;
 using SurveyApi.Services;
 
 namespace SurveyApi.Controllers
@@ -9,8 +10,8 @@ namespace SurveyApi.Controllers
     [ApiController]
     public class SurveyController(ISurveyService surveyService) : ControllerBase
     {
-        [HttpGet("{questionId}")]
-        public async Task<ActionResult<QuestionDto>> GetQuestion(int questionId)
+        [HttpGet("get-question")]
+        public async Task<ActionResult<QuestionDto>> GetQuestion([FromQuery] int questionId)
         {
             var question = await surveyService.GetQuestionAsync(questionId);
 
@@ -23,23 +24,35 @@ namespace SurveyApi.Controllers
         [HttpPost("save-answer")]
         public async Task<ActionResult<QuestionIdDto>> SaveAswer([FromBody] SaveAnswerDto saveAnswerDto)
         {
-            var question = await surveyService.SaveAnswerAsync(saveAnswerDto);
+            await surveyService.SaveAnswerAsync(saveAnswerDto);
+            var questionId = await surveyService.GetNextQuestionIdAsync(saveAnswerDto.QuestionId);
 
-            if (question.QuestionId == -1)
+            if (questionId == -1)
+            {
+                await surveyService.FinishInterviewAsync(saveAnswerDto.InterviewId);
                 return NoContent();
+            }
 
-            return Ok(question);
+            return Ok(new QuestionIdDto
+            {
+                QuestionId = questionId
+            });
         }
 
         [HttpPost("start-survey")]
         public async Task<ActionResult<QuestionAndInterviewDto>> StartSurvey([FromBody] StartSurveyDto startSurveyDto)
         {
-            var question = await surveyService.StartSurveyAsync(startSurveyDto);
+            var interviewId = await surveyService.StartInterviewAsync(startSurveyDto);
+            var questionId = await surveyService.GetFirstQuestionAsync(startSurveyDto.SurveyId);
 
-            if (question.QuestionId == -1)
+            if (questionId == -1)
                 return NoContent();
 
-            return Ok(question);
+            return Ok(new QuestionAndInterviewDto
+            {
+                InterviewId = interviewId,
+                QuestionId = questionId
+            });
         }
     }
 }
