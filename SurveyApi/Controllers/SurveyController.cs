@@ -20,7 +20,7 @@ namespace SurveyApi.Controllers
             return Ok(question);
         }
 
-        [HttpPost]
+        [HttpPost("save-answer")]
         public async Task<ActionResult<QuestionIdDto>> SaveAswer([FromBody] SaveAnswerDto saveAnswerDto)
         {
             var question = await surveyService.SaveAnswerAsync(saveAnswerDto);
@@ -31,12 +31,12 @@ namespace SurveyApi.Controllers
             return Ok(question);
         }
 
-        [HttpPost]
+        [HttpPost("start-survey")]
         public async Task<ActionResult<QuestionAndInterviewDto>> StartSurvey([FromBody] StartSurveyDto startSurveyDto)
         {
             var question = await surveyService.StartSurveyAsync(startSurveyDto);
 
-            if (question.QuestionId != -1)
+            if (question.QuestionId == -1)
                 return NoContent();
 
             return Ok(question);

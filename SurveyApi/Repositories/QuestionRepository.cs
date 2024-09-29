@@ -11,13 +11,13 @@ namespace SurveyApi.Repositories
         {
             var currentQuestion = await context.Questions
                 .Where(q => q.Id == questionId)
-                .Select(q => new { q.SurveyId, q.QuesionOrder })
+                .Select(q => new { q.SurveyId, q.QuestionOrder })
                 .FirstOrDefaultAsync()
                 ?? throw new InvalidOperationException($"Unable to find question with id: {questionId}");
 
             var nextQuestionId = await context.Questions
-                .Where (q => q.SurveyId == currentQuestion.SurveyId && q.QuesionOrder > currentQuestion.QuesionOrder)
-                .OrderBy(q => q.QuesionOrder)
+                .Where(q => q.SurveyId == currentQuestion.SurveyId && q.QuestionOrder > currentQuestion.QuestionOrder)
+                .OrderBy(q => q.QuestionOrder)
                 .Select(q => q.Id)
                 .FirstOrDefaultAsync();
 
@@ -28,7 +28,7 @@ namespace SurveyApi.Repositories
         {
             var firstQuestionId = await context.Questions
                 .Where(q => q.SurveyId == surveyId)
-                .OrderBy(q => q.QuesionOrder)
+                .OrderBy(q => q.QuestionOrder)
                 .Select(q => q.Id)
                 .FirstOrDefaultAsync();
 

@@ -38,10 +38,10 @@ namespace SurveyApi.Services
             };
 
             return new QuestionAndInterviewDto
-            { 
+            {
                 InterviewId = await interviewRepository.AddInterviewAsync(interview),
                 QuestionId = await questionRepository.GetFirstQuestionIdBySurveyIdAsync(startSurveyDto.SurveyId)
-            }; 
+            };
         }
 
         public async Task<QuestionIdDto> SaveAnswerAsync(SaveAnswerDto saveAnswerDto)
