@@ -1,10 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using SurveyApi.Data;
+using SurveyApi.Repositories;
+using SurveyApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add MVC controllers
 builder.Services.AddControllers();
+
+// Add Swagger 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // Add database context
 var connectionString = builder.Configuration.GetConnectionString("NpgConnection")
@@ -13,9 +19,11 @@ var connectionString = builder.Configuration.GetConnectionString("NpgConnection"
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-// Add Swagger 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// Register dependencies
+builder.Services.AddScoped<ISurveyService, SurveyService>();
+builder.Services.AddScoped<IResultRepository, ResultRepository>();
+builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
+builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
 
 var app = builder.Build();
 

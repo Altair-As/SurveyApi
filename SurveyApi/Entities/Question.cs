@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public required string Text { get; set; }
-        public int QuesionOrder { get; set; }
+        public int QuestionOrder { get; set; }
 
         public int SurveyId { get; set; }
         public Survey Survey { get; set; }
